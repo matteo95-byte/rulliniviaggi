@@ -1,0 +1,15 @@
+body {
+  background: #111;
+  color: #eee;
+  font-family: sans-serif;
+  text-align: center;
+}
+img {
+  max-width: 90%;
+  margin: 20px 0;
+}
+button {
+  font-size: 24px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
