@@ -1,20 +1,26 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getFirestore, doc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-// INCOLLA QUI IL BLOCCO DI CONFIGURAZIONE DI FIREBASE
-const firebaseConfig = {
-  apiKey: "XXX",
-  authDomain: "XXX",
-  projectId: "XXX",
-  storageBucket: "XXX",
-  messagingSenderId: "XXX",
-  appId: "XXX"
-};
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyA9-cVNzBlVOElttIDI39Zjkuf4JKOjEdY",
+    authDomain: "viaggi-analogici.firebaseapp.com",
+    projectId: "viaggi-analogici",
+    storageBucket: "viaggi-analogici.firebasestorage.app",
+    messagingSenderId: "9701288769",
+    appId: "1:9701288769:web:c8e8b3db272823dafe8fc0"
+  };
+
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const photoId = "foto1";
+const photoId = "fiore_yfh2db";
 const likeRef = doc(db, "likes", photoId);
 
 const countEl = document.getElementById("likeCount");
