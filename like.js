@@ -27,10 +27,6 @@ const photos = [
   { id: "benito_shjdqg", url: "https://res.cloudinary.com/dim73lhdw/image/upload/v1770334313/benito_shjdqg.png", destination: "Benito" },
   { id: "montagna_cd456", url: "https://res.cloudinary.com/dim73lhdw/image/upload/v1770160997/montagna_cd456.png", destination: "Dolomiti" },
 
-  // puoi aggiungere qui nuove foto, il documento Firebase sarà creato automaticamente
-  { id: "lago_ef789", url: "https://res.cloudinary.com/dim73lhdw/image/upload/v1770160997/lago_ef789.png", destination: "Lago di Como" }
-];
-
 // ---- GALLERY ----
 const gallery = document.getElementById("gallery");
 
