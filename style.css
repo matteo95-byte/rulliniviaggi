@@ -15,10 +15,27 @@ img {
   margin: 20px 0;
 }
 
-/* -------------------------- */
-/* STILE BUTTON               */
-/* -------------------------- */
 button {
+  font-size: 18px;
+  padding: 8px 16px;
+  cursor: pointer;
+  background: none;
+  border: 1px solid #eee;
+  color: #eee;
+  margin: 5px;
+  border-radius: 5px;
+  transition: background 0.2s, color 0.2s;
+}
+
+button:hover {
+  background: #eee;
+  color: #111;
+}
+
+/* -------------------------- */
+/* LIKE BUTTON               */
+/* -------------------------- */
+.likeBtn {
   font-size: 24px;
   padding: 10px 20px;
   cursor: pointer;
@@ -26,17 +43,14 @@ button {
   border: none;
   display: inline-flex;
   align-items: center;
-  gap: 8px; /* spazio tra cuore e contatore */
+  gap: 8px;
 }
 
-/* -------------------------- */
-/* CUORE LIKE                 */
-/* -------------------------- */
-#heart {
-  display: inline-block; /* necessario per trasformazioni */
+/* cuore animazione */
+.heartWrapper {
+  display: inline-block;
 }
 
-/* animazione pop */
 .pop {
   animation: pop 0.3s forwards;
 }
@@ -48,6 +62,12 @@ button {
 }
 
 /* contatore like */
-#likeCount {
+.likeCount {
   font-weight: bold;
 }
+
+/* photo container */
+.photo {
+  margin-bottom: 40px;
+}
+
