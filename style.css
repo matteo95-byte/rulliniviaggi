@@ -36,12 +36,26 @@ button {
 /* -------------------------- */
 
 #heart {
-  transition: transform 0.15s ease; /* animazione pop */
+  display: inline-block;  /* serve per la trasformazione */
+  transition: transform 0.15s ease;
 }
 
-#likeBtn:active #heart {
-  transform: scale(1.2); /* effetto pop al click */
+.pop {
+  animation: pop 0.3s forwards;
 }
+
+@keyframes pop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.4);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 
 /* -------------------------- */
 /* NUMERO LIKE                */
