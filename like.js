@@ -25,12 +25,13 @@ const db = getFirestore(app);
 const photos = [
   { id: "fiore_yfh2db", url: "https://res.cloudinary.com/dim73lhdw/image/upload/v1770160997/fiore_yfh2db.png", destination: "Roma" },
   { id: "benito_shjdqg", url: "https://res.cloudinary.com/dim73lhdw/image/upload/v1770334313/benito_shjdqg.png", destination: "Benito" },
-  { id: "montagna_cd456", url: "https://res.cloudinary.com/dim73lhdw/image/upload/v1770160997/montagna_cd456.png", destination: "Dolomiti" },
+  { id: "montagna_cd456", url: "https://res.cloudinary.com/dim73lhdw/image/upload/v1770160997/montagna_cd456.png", destination: "Dolomiti" }
+];
 
 // ---- GALLERY ----
 const gallery = document.getElementById("gallery");
 
-// ---- FUNZIONE INIZIALIZZA LIKE ----
+// ---- INIZIALIZZA LIKE BUTTON ----
 async function initLikeButton(div, photoId) {
   const btn = div.querySelector(".likeBtn");
   const heartEl = div.querySelector(".heart");
@@ -45,14 +46,12 @@ async function initLikeButton(div, photoId) {
     heartEl.textContent = liked ? "❤️" : "🤍";
   }
 
-  // ---- CARICA LIKE ----
   async function loadLikes() {
     const snap = await getDoc(doc(db, "likes", photoId));
     countEl.textContent = snap.exists() ? snap.data().count : "0";
     setLikedUI(isLiked());
   }
 
-  // ---- CLICK LIKE ----
   btn.onclick = async () => {
     const liked = isLiked();
 
@@ -77,31 +76,33 @@ async function initLikeButton(div, photoId) {
   loadLikes();
 }
 
-// ---- CREAZIONE FOTO ----
-photos.forEach(async photo => {
-  const div = document.createElement("div");
-  div.classList.add("photo");
-  div.dataset.destination = photo.destination;
+// ---- CREAZIONE FOTO DINAMICA ----
+(async () => {
+  for (const photo of photos) {
+    const div = document.createElement("div");
+    div.classList.add("photo");
+    div.dataset.destination = photo.destination;
 
-  div.innerHTML = `
-    <img src="${photo.url}" width="90%">
-    <button class="likeBtn" aria-label="Mi piace">
-      <span class="heartWrapper"><span class="heart">🤍</span></span>
-      <span class="likeCount">0</span>
-    </button>
-  `;
+    div.innerHTML = `
+      <img src="${photo.url}" width="90%">
+      <button class="likeBtn" aria-label="Mi piace">
+        <span class="heartWrapper"><span class="heart">🤍</span></span>
+        <span class="likeCount">0</span>
+      </button>
+    `;
 
-  gallery.appendChild(div);
+    gallery.appendChild(div);
 
-  // ---- CREA DOCUMENTO FIREBASE SE NON ESISTE ----
-  const docRef = doc(db, "likes", photo.id);
-  const snap = await getDoc(docRef);
-  if (!snap.exists()) {
-    await setDoc(docRef, { count: 0 });
+    // ---- CREA DOCUMENTO FIREBASE SE NON ESISTE ----
+    const docRef = doc(db, "likes", photo.id);
+    const snap = await getDoc(docRef);
+    if (!snap.exists()) {
+      await setDoc(docRef, { count: 0 });
+    }
+
+    initLikeButton(div, photo.id);
   }
-
-  initLikeButton(div, photo.id);
-});
+})();
 
 // ---- FILTRO DESTINAZIONE ----
 window.filterDestination = function(dest) {
