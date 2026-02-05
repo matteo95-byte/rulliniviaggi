@@ -4,12 +4,27 @@ body {
   font-family: sans-serif;
   text-align: center;
 }
+
 img {
   max-width: 90%;
   margin: 20px 0;
 }
+
 button {
   font-size: 24px;
   padding: 10px 20px;
   cursor: pointer;
+  background: none;
+  border: none;
+}
+
+/* ---- LIKE BUTTON ---- */
+#likeBtn {
+  color: gray;
+  transition: color 0.2s ease, transform 0.15s ease;
+}
+
+#likeBtn.liked {
+  color: red;
+  transform: scale(1.1);
 }
