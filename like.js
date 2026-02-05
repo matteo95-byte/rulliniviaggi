@@ -7,6 +7,7 @@ import {
   increment
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
+// ---- FIREBASE ----
 const firebaseConfig = {
   apiKey: "AIzaSyA9-cVNzBlVOElttIDI39Zjkuf4JKOjEdY",
   authDomain: "viaggi-analogici.firebaseapp.com",
@@ -22,16 +23,18 @@ const db = getFirestore(app);
 const photoId = "fiore_yfh2db";
 const likeRef = doc(db, "likes", photoId);
 
+// ---- ELEMENTI DOM ----
 const countEl = document.getElementById("likeCount");
 const btn = document.getElementById("likeBtn");
+const heartEl = document.getElementById("heart");
 
-// ---- STATO LIKE LOCALE ----
+// ---- STATO LOCALE ----
 function isLiked() {
   return localStorage.getItem(photoId) === "true";
 }
 
 function setLikedUI(liked) {
-  btn.style.color = liked ? "red" : "gray";
+  heartEl.textContent = liked ? "❤️" : "🤍";
 }
 
 // ---- CARICA LIKE ----
@@ -43,7 +46,7 @@ async function loadLikes() {
     countEl.textContent = "0";
   }
 
-  btn.classList.toggle("liked", localStorage.getItem(photoId) === "true");
+  setLikedUI(isLiked());
 }
 
 // ---- CLICK LIKE ----
@@ -54,15 +57,15 @@ btn.onclick = async () => {
     // UNLIKE
     await updateDoc(likeRef, { count: increment(-1) });
     localStorage.removeItem(photoId);
-    setLikedUI(false);
   } else {
     // LIKE
     await updateDoc(likeRef, { count: increment(1) });
     localStorage.setItem(photoId, "true");
-    setLikedUI(true);
   }
 
   loadLikes();
 };
 
+// ---- INIZIALIZZAZIONE ----
 loadLikes();
+
