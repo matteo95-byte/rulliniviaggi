@@ -9,13 +9,16 @@
 
 <h1>Viaggi Analogici</h1>
 
-<div class="photo">
-  <img src="https://res.cloudinary.com/dim73lhdw/image/upload/v1770160997/fiore_yfh2db.png" width="90%">
-  <button id="likeBtn" aria-label="Mi piace">
-    <span id="heart">🤍</span>
-    <span id="likeCount">0</span>
-  </button>
+<!-- FILTRI DESTINAZIONE -->
+<div id="filters">
+  <button onclick="filterDestination('all')">Tutte</button>
+  <button onclick="filterDestination('Roma')">Roma</button>
+  <button onclick="filterDestination('Sardegna')">Sardegna</button>
+  <button onclick="filterDestination('Dolomiti')">Dolomiti</button>
 </div>
+
+<!-- GALLERY -->
+<div id="gallery"></div>
 
 <script type="module" src="like.js"></script>
 </body>
