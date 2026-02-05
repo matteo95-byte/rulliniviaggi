@@ -1,11 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import {
-  getFirestore,
-  doc,
-  getDoc,
-  updateDoc,
-  increment
-} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+import { getFirestore, doc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
 // ---- FIREBASE ----
 const firebaseConfig = {
@@ -54,22 +48,28 @@ btn.onclick = async () => {
   const liked = isLiked();
 
   if (liked) {
+    // UNLIKE
     await updateDoc(likeRef, { count: increment(-1) });
     localStorage.removeItem(photoId);
     setLikedUI(false);
   } else {
+    // LIKE
     await updateDoc(likeRef, { count: increment(1) });
     localStorage.setItem(photoId, "true");
     setLikedUI(true);
   }
 
   // ✨ animazione pop
-  heartEl.classList.remove("pop");      // reset
-  void heartEl.offsetWidth;             // forza il reflow
-  heartEl.classList.add("pop");         // parte animazione
+  heartEl.classList.remove("pop");   // reset
+  void heartEl.offsetWidth;          // forza reflow
+  heartEl.classList.add("pop");      // parte animazione
 
   loadLikes();
 };
+
+// ---- INIZIALIZZAZIONE ----
+loadLikes();
+
 
 
 // ---- INIZIALIZZAZIONE ----
