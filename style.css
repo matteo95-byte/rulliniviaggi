@@ -1,8 +1,14 @@
+/* -------------------------- */
+/* STILE GENERALE DEL SITO    */
+/* -------------------------- */
+
 body {
   background: #111;
   color: #eee;
   font-family: sans-serif;
   text-align: center;
+  margin: 0;
+  padding: 0;
 }
 
 img {
@@ -10,21 +16,37 @@ img {
   margin: 20px 0;
 }
 
+/* -------------------------- */
+/* STILE DEI BUTTON           */
+/* -------------------------- */
+
 button {
   font-size: 24px;
   padding: 10px 20px;
   cursor: pointer;
   background: none;
   border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px; /* spazio tra cuore e contatore */
 }
 
-/* ---- LIKE BUTTON ---- */
-#likeBtn {
-  color: gray;
-  transition: color 0.2s ease, transform 0.15s ease;
+/* -------------------------- */
+/* LIKE BUTTON CUORE          */
+/* -------------------------- */
+
+#heart {
+  transition: transform 0.15s ease; /* animazione pop */
 }
 
-#likeBtn.liked {
-  color: red;
-  transform: scale(1.1);
+#likeBtn:active #heart {
+  transform: scale(1.2); /* effetto pop al click */
+}
+
+/* -------------------------- */
+/* NUMERO LIKE                */
+/* -------------------------- */
+
+#likeCount {
+  font-weight: bold;
 }
