@@ -43,7 +43,7 @@ async function loadLikes() {
     countEl.textContent = "0";
   }
 
-  setLikedUI(isLiked());
+  btn.classList.toggle("liked", localStorage.getItem(photoId) === "true");
 }
 
 // ---- CLICK LIKE ----
