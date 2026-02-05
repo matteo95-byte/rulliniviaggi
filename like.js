@@ -1,5 +1,12 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getFirestore, doc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  increment
+} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
 // ---- FIREBASE ----
 const firebaseConfig = {
@@ -18,14 +25,17 @@ const db = getFirestore(app);
 const photos = [
   { id: "fiore_yfh2db", url: "https://res.cloudinary.com/dim73lhdw/image/upload/v1770160997/fiore_yfh2db.png", destination: "Roma" },
   { id: "mare_ab123", url: "https://res.cloudinary.com/dim73lhdw/image/upload/v1770160997/mare_ab123.png", destination: "Sardegna" },
-  { id: "montagna_cd456", url: "https://res.cloudinary.com/dim73lhdw/image/upload/v1770160997/montagna_cd456.png", destination: "Dolomiti" }
+  { id: "montagna_cd456", url: "https://res.cloudinary.com/dim73lhdw/image/upload/v1770160997/montagna_cd456.png", destination: "Dolomiti" },
+
+  // puoi aggiungere qui nuove foto, il documento Firebase sarà creato automaticamente
+  { id: "lago_ef789", url: "https://res.cloudinary.com/dim73lhdw/image/upload/v1770160997/lago_ef789.png", destination: "Lago di Como" }
 ];
 
 // ---- GALLERY ----
 const gallery = document.getElementById("gallery");
 
 // ---- FUNZIONE INIZIALIZZA LIKE ----
-function initLikeButton(div, photoId) {
+async function initLikeButton(div, photoId) {
   const btn = div.querySelector(".likeBtn");
   const heartEl = div.querySelector(".heart");
   const heartWrapper = div.querySelector(".heartWrapper");
@@ -35,64 +45,7 @@ function initLikeButton(div, photoId) {
     return localStorage.getItem(photoId) === "true";
   }
 
-  function setLikedUI(liked) {
-    heartEl.textContent = liked ? "❤️" : "🤍";
-  }
+  functi
 
-  async function loadLikes() {
-    const snap = await getDoc(doc(db, "likes", photoId));
-    countEl.textContent = snap.exists() ? snap.data().count : "0";
-    setLikedUI(isLiked());
-  }
-
-  btn.onclick = async () => {
-    const liked = isLiked();
-
-    if (liked) {
-      await updateDoc(doc(db, "likes", photoId), { count: increment(-1) });
-      localStorage.removeItem(photoId);
-      setLikedUI(false);
-    } else {
-      await updateDoc(doc(db, "likes", photoId), { count: increment(1) });
-      localStorage.setItem(photoId, "true");
-      setLikedUI(true);
-    }
-
-    // animazione pop
-    heartWrapper.classList.remove("pop");
-    void heartWrapper.offsetWidth; // forza reflow
-    heartWrapper.classList.add("pop");
-
-    loadLikes();
-  };
-
-  loadLikes();
-}
-
-// ---- CREAZIONE FOTO ----
-photos.forEach(photo => {
-  const div = document.createElement("div");
-  div.classList.add("photo");
-  div.dataset.destination = photo.destination;
-
-  div.innerHTML = `
-    <img src="${photo.url}" width="90%">
-    <button class="likeBtn" aria-label="Mi piace">
-      <span class="heartWrapper"><span class="heart">🤍</span></span>
-      <span class="likeCount">0</span>
-    </button>
-  `;
-
-  gallery.appendChild(div);
-
-  initLikeButton(div, photo.id);
-});
-
-// ---- FILTRO DESTINAZIONE ----
-window.filterDestination = function(dest) {
-  document.querySelectorAll(".photo").forEach(div => {
-    div.style.display = (dest === "all" || div.dataset.destination === dest) ? "block" : "none";
-  });
-};
 
 
