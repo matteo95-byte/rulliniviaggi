@@ -45,7 +45,75 @@ async function initLikeButton(div, photoId) {
     return localStorage.getItem(photoId) === "true";
   }
 
-  functi
+  function setLikedUI(liked) {
+    heartEl.textContent = liked ? "❤️" : "🤍";
+  }
+
+  // ---- CARICA LIKE ----
+  async function loadLikes() {
+    const snap = await getDoc(doc(db, "likes", photoId));
+    countEl.textContent = snap.exists() ? snap.data().count : "0";
+    setLikedUI(isLiked());
+  }
+
+  // ---- CLICK LIKE ----
+  btn.onclick = async () => {
+    const liked = isLiked();
+
+    if (liked) {
+      await updateDoc(doc(db, "likes", photoId), { count: increment(-1) });
+      localStorage.removeItem(photoId);
+      setLikedUI(false);
+    } else {
+      await updateDoc(doc(db, "likes", photoId), { count: increment(1) });
+      localStorage.setItem(photoId, "true");
+      setLikedUI(true);
+    }
+
+    // animazione pop
+    heartWrapper.classList.remove("pop");
+    void heartWrapper.offsetWidth; // forza reflow
+    heartWrapper.classList.add("pop");
+
+    loadLikes();
+  };
+
+  loadLikes();
+}
+
+// ---- CREAZIONE FOTO ----
+photos.forEach(async photo => {
+  const div = document.createElement("div");
+  div.classList.add("photo");
+  div.dataset.destination = photo.destination;
+
+  div.innerHTML = `
+    <img src="${photo.url}" width="90%">
+    <button class="likeBtn" aria-label="Mi piace">
+      <span class="heartWrapper"><span class="heart">🤍</span></span>
+      <span class="likeCount">0</span>
+    </button>
+  `;
+
+  gallery.appendChild(div);
+
+  // ---- CREA DOCUMENTO FIREBASE SE NON ESISTE ----
+  const docRef = doc(db, "likes", photo.id);
+  const snap = await getDoc(docRef);
+  if (!snap.exists()) {
+    await setDoc(docRef, { count: 0 });
+  }
+
+  initLikeButton(div, photo.id);
+});
+
+// ---- FILTRO DESTINAZIONE ----
+window.filterDestination = function(dest) {
+  document.querySelectorAll(".photo").forEach(div => {
+    div.style.display = (dest === "all" || div.dataset.destination === dest) ? "block" : "none";
+  });
+};
+
 
 
 
