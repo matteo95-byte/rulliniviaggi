@@ -1,7 +1,6 @@
 /* -------------------------- */
 /* STILE GENERALE DEL SITO    */
 /* -------------------------- */
-
 body {
   background: #111;
   color: #eee;
@@ -17,9 +16,8 @@ img {
 }
 
 /* -------------------------- */
-/* STILE DEI BUTTON           */
+/* STILE BUTTON               */
 /* -------------------------- */
-
 button {
   font-size: 24px;
   padding: 10px 20px;
@@ -32,35 +30,24 @@ button {
 }
 
 /* -------------------------- */
-/* LIKE BUTTON CUORE          */
+/* CUORE LIKE                 */
 /* -------------------------- */
-
 #heart {
-  display: inline-block;  /* serve per la trasformazione */
-  transition: transform 0.15s ease;
+  display: inline-block; /* necessario per trasformazioni */
 }
 
+/* animazione pop */
 .pop {
   animation: pop 0.3s forwards;
 }
 
 @keyframes pop {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.4);
-  }
-  100% {
-    transform: scale(1);
-  }
+  0% { transform: scale(1); }
+  50% { transform: scale(1.4); }
+  100% { transform: scale(1); }
 }
 
-
-/* -------------------------- */
-/* NUMERO LIKE                */
-/* -------------------------- */
-
+/* contatore like */
 #likeCount {
   font-weight: bold;
 }
