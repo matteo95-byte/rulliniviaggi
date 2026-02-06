@@ -23,7 +23,7 @@ const db = getFirestore(app);
 
 // ---- ARRAY FOTO ----
 const photos = [
-  { id: "fiore_yfh2db", url: "https://res.cloudinary.com/dim73lhdw/image/upload/v1770160997/fiore_yfh2db.png", destination: "Roma" },
+  { id: "fiore_yfh2db", url: "https://res.cloudinary.com/dim73lhdw/image/upload/v1770160997/fiore_yfh2db.png", destination: "Provincia di Ascoli" },
   { id: "benito_shjdqg", url: "https://res.cloudinary.com/dim73lhdw/image/upload/v1770334313/benito_shjdqg.png", destination: "Benito" }
 ];
 
