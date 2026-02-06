@@ -14,34 +14,18 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 // ---- ARRAY FOTO ----
-const photos = [
+// Qui puoi aggiungere, rimuovere o modificare foto e destinazioni
+let photos = [
   { id: "fiore_yfh2db", url: "https://res.cloudinary.com/dim73lhdw/image/upload/v1770160997/fiore_yfh2db.png", destination: "Ascoli" },
-  { id: "benito_shjdqg", url: "https://res.cloudinary.com/dim73lhdw/image/upload/v1770334313/benito_shjdqg.png", destination: "Benito" }
+  { id: "benito_shjdqg", url: "https://res.cloudinary.com/dim73lhdw/image/upload/v1770334313/benito_shjdqg.png", destination: "Benito" },
+  { id: "montagna_cd456", url: "https://res.cloudinary.com/dim73lhdw/image/upload/v1770160997/montagna_cd456.png", destination: "Dolomiti" }
 ];
 
-// ---- CREAZIONE FILTRI DINAMICI ----
-function createFilters() {
-  const filtersDiv = document.getElementById("filters");
-  filtersDiv.innerHTML = ""; // pulisce pulsanti vecchi
+// ---- SELEZIONI HTML ----
+const gallery = document.getElementById("gallery");
+const filtersDiv = document.getElementById("filters");
 
-  const destinations = ["all", ...new Set(photos.map(p => p.destination))];
-
-  destinations.forEach(dest => {
-    const btn = document.createElement("button");
-    btn.textContent = dest === "all" ? "Tutte" : dest;
-    btn.onclick = () => filterDestination(dest);
-    filtersDiv.appendChild(btn);
-  });
-}
-
-// ---- FILTRO DESTINAZIONE ----
-function filterDestination(dest) {
-  document.querySelectorAll(".photo").forEach(div => {
-    div.style.display = (dest === "all" || div.dataset.destination === dest) ? "block" : "none";
-  });
-}
-
-// ---- LIKE BUTTON ----
+// ---- FUNZIONE LIKE BUTTON ----
 async function initLikeButton(div, photoId) {
   const btn = div.querySelector(".likeBtn");
   const heartEl = div.querySelector(".heart");
@@ -80,10 +64,30 @@ async function initLikeButton(div, photoId) {
   loadLikes();
 }
 
+// ---- CREAZIONE FILTRI DINAMICI ----
+function createFilters() {
+  filtersDiv.innerHTML = ""; // pulisce pulsanti vecchi
+  const destinations = ["all", ...new Set(photos.map(p => p.destination))];
+
+  destinations.forEach(dest => {
+    const btn = document.createElement("button");
+    btn.textContent = dest === "all" ? "Tutte" : dest;
+    btn.onclick = () => filterDestination(dest);
+    filtersDiv.appendChild(btn);
+  });
+}
+
+// ---- FILTRO ----
+function filterDestination(dest) {
+  document.querySelectorAll(".photo").forEach(div => {
+    div.style.display = (dest === "all" || div.dataset.destination === dest) ? "block" : "none";
+  });
+}
+
 // ---- CREAZIONE GALLERY DINAMICA ----
-(async () => {
-  createFilters(); // genera pulsanti filtro dinamici
-  const gallery = document.getElementById("gallery");
+async function createGallery() {
+  gallery.innerHTML = ""; // svuota gallery
+  createFilters(); // genera pulsanti filtro aggiornati
 
   for (const photo of photos) {
     const div = document.createElement("div");
@@ -100,14 +104,21 @@ async function initLikeButton(div, photoId) {
 
     gallery.appendChild(div);
 
-    // crea documento Firebase se non esiste
     const docRef = doc(db, "likes", photo.id);
     const snap = await getDoc(docRef);
     if (!snap.exists()) await setDoc(docRef, { count: 0 });
 
     initLikeButton(div, photo.id);
   }
-})();
+}
+
+// ---- AVVIO ----
+createGallery();
+
+// ---- OPZIONE: puoi aggiornare gallery e filtri in qualsiasi momento modificando l'array ----
+// Esempio:
+// photos.push({ id: "nuova_foto_001", url: "URL_CLOUDINARY", destination: "Milano" });
+// createGallery(); // aggiorna tutto automaticamente
 
 
 
