@@ -15,7 +15,14 @@
 <!-- GALLERY -->
 <div id="gallery"></div>
 
-<!-- JS -->
-<script type="module" src="like.js?v=4"></script>
+<!-- CARICAMENTO DINAMICO DEL JS CON CACHE-BUSTING -->
+<script type="module">
+  const script = document.createElement("script");
+  script.type = "module";
+  // Aggiunge timestamp per forzare il download del JS aggiornato
+  script.src = `like.js?t=${Date.now()}`;
+  document.body.appendChild(script);
+</script>
+
 </body>
 </html>
