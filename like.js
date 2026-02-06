@@ -14,10 +14,11 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 // ---- ARRAY FOTO ----
-// Qui puoi aggiungere, rimuovere o modificare foto e destinazioni
+// Modifica, aggiungi o rimuovi foto qui
 let photos = [
   { id: "fiore_yfh2db", url: "https://res.cloudinary.com/dim73lhdw/image/upload/v1770160997/fiore_yfh2db.png", destination: "Ascoli" },
-  { id: "benito_shjdqg", url: "https://res.cloudinary.com/dim73lhdw/image/upload/v1770334313/benito_shjdqg.png", destination: "Benito" }
+  { id: "benito_shjdqg", url: "https://res.cloudinary.com/dim73lhdw/image/upload/v1770334313/benito_shjdqg.png", destination: "Benito" },
+  { id: "montagna_cd456", url: "https://res.cloudinary.com/dim73lhdw/image/upload/v1770160997/montagna_cd456.png", destination: "Dolomiti" }
 ];
 
 // ---- SELEZIONI HTML ----
@@ -65,7 +66,7 @@ async function initLikeButton(div, photoId) {
 
 // ---- CREAZIONE FILTRI DINAMICI ----
 function createFilters() {
-  filtersDiv.innerHTML = ""; // pulisce pulsanti vecchi
+  filtersDiv.innerHTML = ""; // svuota pulsanti vecchi
   const destinations = ["all", ...new Set(photos.map(p => p.destination))];
 
   destinations.forEach(dest => {
@@ -85,8 +86,8 @@ function filterDestination(dest) {
 
 // ---- CREAZIONE GALLERY DINAMICA ----
 async function createGallery() {
-  gallery.innerHTML = ""; // svuota gallery
-  createFilters(); // genera pulsanti filtro aggiornati
+  gallery.innerHTML = ""; // pulisce gallery
+  createFilters(); // aggiorna pulsanti filtro
 
   for (const photo of photos) {
     const div = document.createElement("div");
@@ -114,10 +115,11 @@ async function createGallery() {
 // ---- AVVIO ----
 createGallery();
 
-// ---- OPZIONE: puoi aggiornare gallery e filtri in qualsiasi momento modificando l'array ----
+// ---- OPZIONE AGGIORNAMENTO AUTOMATICO ----
+// Se modifichi l'array photos, basta richiamare createGallery() per aggiornare gallery e pulsanti
 // Esempio:
-// photos.push({ id: "nuova_foto_001", url: "URL_CLOUDINARY", destination: "Milano" });
-// createGallery(); // aggiorna tutto automaticamente
+// photos.push({ id: "nuova_foto", url: "URL_CLOUDINARY", destination: "Milano" });
+// createGallery();
 
 
 
