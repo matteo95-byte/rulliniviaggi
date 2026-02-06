@@ -8,7 +8,7 @@ import {
   increment
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-// ---- FIREBASE ----
+// ---- CONFIG FIREBASE ----
 const firebaseConfig = {
   apiKey: "AIzaSyA9-cVNzBlVOElttIDI39Zjkuf4JKOjEdY",
   authDomain: "viaggi-analogici.firebaseapp.com",
@@ -23,27 +23,45 @@ const db = getFirestore(app);
 
 // ---- ARRAY FOTO ----
 const photos = [
-  { id: "fiore_yfh2db", url: "https://res.cloudinary.com/dim73lhdw/image/upload/v1770160997/fiore_yfh2db.png", destination: "Provincia di Ascoli" },
-  { id: "benito_shjdqg", url: "https://res.cloudinary.com/dim73lhdw/image/upload/v1770334313/benito_shjdqg.png", destination: "Benito" }
+  { id: "fiore_yfh2db", url: "https://res.cloudinary.com/dim73lhdw/image/upload/v1770160997/fiore_yfh2db.png", destination: "Ascoli" },
+  { id: "benito_shjdqg", url: "https://res.cloudinary.com/dim73lhdw/image/upload/v1770334313/benito_shjdqg.png", destination: "Benito" },
+  { id: "montagna_cd456", url: "https://res.cloudinary.com/dim73lhdw/image/upload/v1770160997/montagna_cd456.png", destination: "Dolomiti" }
 ];
 
 // ---- GALLERY ----
 const gallery = document.getElementById("gallery");
 
-// ---- INIZIALIZZA LIKE BUTTON ----
+// ---- CREAZIONE FILTRI DINAMICI ----
+function createFilters() {
+  const filtersDiv = document.getElementById("filters");
+  filtersDiv.innerHTML = ""; // cancella pulsanti vecchi
+
+  const destinations = ["all", ...new Set(photos.map(p => p.destination))];
+
+  destinations.forEach(dest => {
+    const btn = document.createElement("button");
+    btn.textContent = dest === "all" ? "Tutte" : dest;
+    btn.onclick = () => filterDestination(dest);
+    filtersDiv.appendChild(btn);
+  });
+}
+
+// ---- FUNZIONE FILTRO ----
+function filterDestination(dest) {
+  document.querySelectorAll(".photo").forEach(div => {
+    div.style.display = (dest === "all" || div.dataset.destination === dest) ? "block" : "none";
+  });
+}
+
+// ---- LIKE BUTTON ----
 async function initLikeButton(div, photoId) {
   const btn = div.querySelector(".likeBtn");
   const heartEl = div.querySelector(".heart");
   const heartWrapper = div.querySelector(".heartWrapper");
   const countEl = div.querySelector(".likeCount");
 
-  function isLiked() {
-    return localStorage.getItem(photoId) === "true";
-  }
-
-  function setLikedUI(liked) {
-    heartEl.textContent = liked ? "❤️" : "🤍";
-  }
+  function isLiked() { return localStorage.getItem(photoId) === "true"; }
+  function setLikedUI(liked) { heartEl.textContent = liked ? "❤️" : "🤍"; }
 
   async function loadLikes() {
     const snap = await getDoc(doc(db, "likes", photoId));
@@ -66,7 +84,7 @@ async function initLikeButton(div, photoId) {
 
     // animazione pop
     heartWrapper.classList.remove("pop");
-    void heartWrapper.offsetWidth; // forza reflow
+    void heartWrapper.offsetWidth;
     heartWrapper.classList.add("pop");
 
     loadLikes();
@@ -77,6 +95,8 @@ async function initLikeButton(div, photoId) {
 
 // ---- CREAZIONE FOTO DINAMICA ----
 (async () => {
+  createFilters(); // genera i pulsanti filtro
+
   for (const photo of photos) {
     const div = document.createElement("div");
     div.classList.add("photo");
@@ -92,23 +112,14 @@ async function initLikeButton(div, photoId) {
 
     gallery.appendChild(div);
 
-    // ---- CREA DOCUMENTO FIREBASE SE NON ESISTE ----
+    // CREA DOCUMENTO FIREBASE SE NON ESISTE
     const docRef = doc(db, "likes", photo.id);
     const snap = await getDoc(docRef);
-    if (!snap.exists()) {
-      await setDoc(docRef, { count: 0 });
-    }
+    if (!snap.exists()) await setDoc(docRef, { count: 0 });
 
     initLikeButton(div, photo.id);
   }
 })();
-
-// ---- FILTRO DESTINAZIONE ----
-window.filterDestination = function(dest) {
-  document.querySelectorAll(".photo").forEach(div => {
-    div.style.display = (dest === "all" || div.dataset.destination === dest) ? "block" : "none";
-  });
-};
 
 
 
