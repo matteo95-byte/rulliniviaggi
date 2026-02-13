@@ -276,20 +276,19 @@ button:hover {
 }
 
 /* -------------------------- */
-/* FULLSCREEN LIKE COUNTER     */
+/* CONTATORE LIKE FULLSCREEN  */
 /* -------------------------- */
 
-.fullscreen-like-count {
+#fullscreenLikeCount {
   position: absolute;
-  bottom: 20px;
-  right: 20px;
-  font-size: 20px;
-  color: white;
-  background: rgba(0,0,0,0.5);
-  padding: 5px 10px;
-  border-radius: 12px;
-  z-index: 12;
-  pointer-events: none;
+  bottom: 20px;       /* distanza dal fondo del lightbox */
+  right: 20px;        /* distanza dal lato destro */
+  color: #fff;        /* colore testo */
+  font-size: 18px;    /* piccolo ma leggibile */
+  font-weight: bold;
+  z-index: 1050;      /* sopra overlay e immagini */
+  pointer-events: none; /* non interferisce con click */
+  user-select: none;  /* non selezionabile */
 }
 
 
