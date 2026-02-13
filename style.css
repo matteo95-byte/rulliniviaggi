@@ -1,6 +1,7 @@
 /* -------------------------- */
-/* STILE GENERALE DEL SITO    */
+/* STILE GENERALE             */
 /* -------------------------- */
+
 body {
   background: #111;
   color: #eee;
@@ -10,10 +11,40 @@ body {
   padding: 0;
 }
 
-img {
-  max-width: 90%;
-  margin: 20px 0;
+h1 {
+  margin-top: 30px;
 }
+
+/* -------------------------- */
+/* GALLERY GRID MODERNA       */
+/* -------------------------- */
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  padding: 40px;
+}
+
+.photo {
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.photo img {
+  width: 100%;
+  border-radius: 12px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.photo:hover img {
+  transform: scale(1.03);
+}
+
+/* -------------------------- */
+/* BUTTON GENERICO            */
+/* -------------------------- */
 
 button {
   font-size: 18px;
@@ -33,8 +64,9 @@ button:hover {
 }
 
 /* -------------------------- */
-/* LIKE BUTTON               */
+/* LIKE BUTTON                */
 /* -------------------------- */
+
 .likeBtn {
   font-size: 24px;
   padding: 10px 20px;
@@ -46,7 +78,6 @@ button:hover {
   gap: 8px;
 }
 
-/* cuore animazione */
 .heartWrapper {
   display: inline-block;
 }
@@ -61,13 +92,117 @@ button:hover {
   100% { transform: scale(1); }
 }
 
-/* contatore like */
 .likeCount {
   font-weight: bold;
 }
 
-/* photo container */
-.photo {
-  margin-bottom: 40px;
+/* -------------------------- */
+/* LIGHTBOX                   */
+/* -------------------------- */
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
+.lightbox.active {
+  display: flex;
+}
+
+.lightbox-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(8px);
+  animation: fadeIn 0.4s ease;
+}
+
+.lightbox-content {
+  position: relative;
+  z-index: 2;
+}
+
+#lightbox-img {
+  max-width: 90vw;
+  max-height: 85vh;
+  border-radius: 12px;
+  transform: scale(0.9);
+  opacity: 0;
+  transition: all 0.4s ease;
+}
+
+.lightbox.active #lightbox-img {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* -------------------------- */
+/* FRECCE ZONA HOVER          */
+/* -------------------------- */
+
+.nav-zone {
+  position: absolute;
+  top: 0;
+  width: 20%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.nav-zone.left { left: 0; }
+.nav-zone.right { right: 0; }
+
+.arrow {
+  font-size: 60px;
+  color: white;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* freccia visibile solo quando il mouse è sulla zona */
+.nav-zone:hover .arrow {
+  opacity: 1;
+}
+
+.close-btn {
+  position: absolute;
+  top: 25px;
+  right: 40px;
+  font-size: 40px;
+  color: white;
+  cursor: pointer;
+  z-index: 3;
+}
+
+/* -------------------------- */
+/* SLIDE ANIMATION            */
+/* -------------------------- */
+
+.slide-left {
+  animation: slideLeft 0.4s ease;
+}
+
+.slide-right {
+  animation: slideRight 0.4s ease;
+}
+
+@keyframes slideLeft {
+  from { transform: translateX(50px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideRight {
+  from { transform: translateX(-50px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
