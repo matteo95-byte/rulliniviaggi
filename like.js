@@ -31,7 +31,7 @@ const lightbox = document.getElementById("lightbox");
 const lightboxImg = document.getElementById("lightbox-img");
 const prevZone = document.getElementById("prevZone");
 const nextZone = document.getElementById("nextZone");
-const closeLightbox = document.getElementById("closeLightbox");
+const closeBtn = document.getElementById("closeLightbox");
 const overlay = document.getElementById("overlay");
 
 let currentIndex = 0;
@@ -60,11 +60,8 @@ async function initLikeButton(div, photoId) {
       count: increment(liked ? -1 : 1)
     });
 
-    if (liked) {
-      localStorage.removeItem(photoId);
-    } else {
-      localStorage.setItem(photoId, "true");
-    }
+    if (liked) localStorage.removeItem(photoId);
+    else localStorage.setItem(photoId, "true");
 
     heartWrapper.classList.remove("pop");
     void heartWrapper.offsetWidth;
@@ -101,45 +98,27 @@ function filterDestination(dest) {
 
 /* -------------------- LIGHTBOX -------------------- */
 
-const lightbox = document.getElementById("lightbox");
-const lightboxImg = document.getElementById("lightbox-img");
-const prevZone = document.getElementById("prevZone");
-const nextZone = document.getElementById("nextZone");
-const closeBtn = document.getElementById("closeLightbox");
-const overlay = document.getElementById("overlay");
-
-let currentIndex = 0;
-
-/* Apertura */
 function openLightbox(index) {
   currentIndex = index;
   lightbox.classList.add("active");
-  document.body.style.overflow = "hidden"; // blocca scroll
+  document.body.style.overflow = "hidden";
   updateImage();
 }
 
-/* Chiusura */
 function closeLightbox() {
   lightbox.classList.remove("active");
   document.body.style.overflow = "auto";
 }
 
-/* Aggiorna immagine */
 function updateImage(direction = null) {
-
   if (direction) {
     lightboxImg.classList.remove("slide-left", "slide-right");
     void lightboxImg.offsetWidth;
-
-    lightboxImg.classList.add(
-      direction === "next" ? "slide-left" : "slide-right"
-    );
+    lightboxImg.classList.add(direction === "next" ? "slide-left" : "slide-right");
   }
-
   lightboxImg.src = photos[currentIndex].url;
 }
 
-/* Navigazione */
 function showNext() {
   currentIndex = (currentIndex + 1) % photos.length;
   updateImage("next");
@@ -150,13 +129,11 @@ function showPrev() {
   updateImage("prev");
 }
 
-/* Eventi */
 nextZone.addEventListener("click", showNext);
 prevZone.addEventListener("click", showPrev);
 closeBtn.addEventListener("click", closeLightbox);
 overlay.addEventListener("click", closeLightbox);
 
-/* Tastiera */
 document.addEventListener("keydown", (e) => {
   if (!lightbox.classList.contains("active")) return;
 
@@ -164,3 +141,43 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "ArrowLeft") showPrev();
   if (e.key === "Escape") closeLightbox();
 });
+
+/* -------------------- CREAZIONE GALLERY -------------------- */
+
+async function createGallery() {
+  gallery.innerHTML = "";
+  createFilters();
+
+  for (let i = 0; i < photos.length; i++) {
+    const photo = photos[i];
+
+    const div = document.createElement("div");
+    div.classList.add("photo");
+    div.dataset.destination = photo.destination;
+
+    div.innerHTML = `
+      <img src="${photo.url}">
+      <button class="likeBtn" aria-label="Mi piace">
+        <span class="heartWrapper"><span class="heart">🤍</span></span>
+        <span class="likeCount">0</span>
+      </button>
+    `;
+
+    gallery.appendChild(div);
+
+    // 👉 apertura lightbox
+    div.querySelector("img").addEventListener("click", () => {
+      openLightbox(i);
+    });
+
+    const docRef = doc(db, "likes", photo.id);
+    const snap = await getDoc(docRef);
+    if (!snap.exists()) await setDoc(docRef, { count: 0 });
+
+    initLikeButton(div, photo.id);
+  }
+}
+
+/* -------------------- AVVIO -------------------- */
+
+createGallery();
