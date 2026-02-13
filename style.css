@@ -280,15 +280,16 @@ button:hover {
 /* -------------------------- */
 
 #fullscreenLikeCount {
-  position: absolute;
-  bottom: 20px;       /* distanza dal fondo del lightbox */
-  right: 20px;        /* distanza dal lato destro */
-  color: #fff;        /* colore testo */
-  font-size: 18px;    /* piccolo ma leggibile */
+  position: fixed;   /* così è rispetto alla finestra, non all’immagine */
+  bottom: 30px;
+  right: 30px;
+  color: #fff;
+  font-size: 18px;
   font-weight: bold;
-  z-index: 1050;      /* sopra overlay e immagini */
-  pointer-events: none; /* non interferisce con click */
-  user-select: none;  /* non selezionabile */
+  z-index: 1100;     /* sopra overlay e frecce */
+  pointer-events: none;
+  user-select: none;
 }
+
 
 
