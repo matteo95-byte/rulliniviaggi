@@ -240,4 +240,56 @@ button:hover {
   0% { transform: translate(-50%, -50%) scale(1); opacity: 1; color: red; }
   100% { transform: translate(-50%, -50%) scale(0); opacity: 0; color: white; }
 }
+/* -------------------------- */
+/* BIG HEART FULLSCREEN        */
+/* -------------------------- */
+
+.big-heart {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  font-size: 100px;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 10;
+}
+
+.big-heart.pop-in {
+  animation: popIn 0.6s forwards;
+}
+
+.big-heart.pop-out {
+  animation: popOut 0.5s forwards;
+}
+
+@keyframes popIn {
+  0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+  30% { transform: translate(-50%, -50%) scale(1.5); opacity: 1; }
+  60% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+
+@keyframes popOut {
+  0% { transform: translate(-50%, -50%) scale(1); opacity: 1; color: red; }
+  100% { transform: translate(-50%, -50%) scale(0); opacity: 0; color: white; }
+}
+
+/* -------------------------- */
+/* FULLSCREEN LIKE COUNTER     */
+/* -------------------------- */
+
+.fullscreen-like-count {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  font-size: 20px;
+  color: white;
+  background: rgba(0,0,0,0.5);
+  padding: 5px 10px;
+  border-radius: 12px;
+  z-index: 12;
+  pointer-events: none;
+}
+
 
