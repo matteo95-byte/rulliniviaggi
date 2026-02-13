@@ -1,7 +1,8 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getFirestore, doc, getDoc, setDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-// ---- FIREBASE ----
+/* -------------------- FIREBASE -------------------- */
+
 const firebaseConfig = {
   apiKey: "AIzaSyA9-cVNzBlVOElttIDI39Zjkuf4JKOjEdY",
   authDomain: "viaggi-analogici.firebaseapp.com",
@@ -10,21 +11,33 @@ const firebaseConfig = {
   messagingSenderId: "9701288769",
   appId: "1:9701288769:web:c8e8b3db272823dafe8fc0"
 };
+
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// ---- ARRAY FOTO ----
-// Modifica, aggiungi o rimuovi foto qui
+/* -------------------- ARRAY FOTO -------------------- */
+
 let photos = [
   { id: "fiore_yfh2db", url: "https://res.cloudinary.com/dim73lhdw/image/upload/v1770160997/fiore_yfh2db.png", destination: "Ascoli" },
   { id: "benito_shjdqg", url: "https://res.cloudinary.com/dim73lhdw/image/upload/v1770334313/benito_shjdqg.png", destination: "Sanmarco" }
 ];
 
-// ---- SELEZIONI HTML ----
+/* -------------------- SELEZIONI HTML -------------------- */
+
 const gallery = document.getElementById("gallery");
 const filtersDiv = document.getElementById("filters");
 
-// ---- FUNZIONE LIKE BUTTON ----
+const lightbox = document.getElementById("lightbox");
+const lightboxImg = document.getElementById("lightbox-img");
+const prevZone = document.getElementById("prevZone");
+const nextZone = document.getElementById("nextZone");
+const closeLightbox = document.getElementById("closeLightbox");
+const overlay = document.getElementById("overlay");
+
+let currentIndex = 0;
+
+/* -------------------- LIKE BUTTON -------------------- */
+
 async function initLikeButton(div, photoId) {
   const btn = div.querySelector(".likeBtn");
   const heartEl = div.querySelector(".heart");
@@ -42,17 +55,17 @@ async function initLikeButton(div, photoId) {
 
   btn.onclick = async () => {
     const liked = isLiked();
+
+    await updateDoc(doc(db, "likes", photoId), {
+      count: increment(liked ? -1 : 1)
+    });
+
     if (liked) {
-      await updateDoc(doc(db, "likes", photoId), { count: increment(-1) });
       localStorage.removeItem(photoId);
-      setLikedUI(false);
     } else {
-      await updateDoc(doc(db, "likes", photoId), { count: increment(1) });
       localStorage.setItem(photoId, "true");
-      setLikedUI(true);
     }
 
-    // animazione pop
     heartWrapper.classList.remove("pop");
     void heartWrapper.offsetWidth;
     heartWrapper.classList.add("pop");
@@ -63,9 +76,10 @@ async function initLikeButton(div, photoId) {
   loadLikes();
 }
 
-// ---- CREAZIONE FILTRI DINAMICI ----
+/* -------------------- FILTRI -------------------- */
+
 function createFilters() {
-  filtersDiv.innerHTML = ""; // svuota pulsanti vecchi
+  filtersDiv.innerHTML = "";
   const destinations = ["all", ...new Set(photos.map(p => p.destination))];
 
   destinations.forEach(dest => {
@@ -76,50 +90,18 @@ function createFilters() {
   });
 }
 
-// ---- FILTRO ----
 function filterDestination(dest) {
   document.querySelectorAll(".photo").forEach(div => {
-    div.style.display = (dest === "all" || div.dataset.destination === dest) ? "block" : "none";
+    div.style.display =
+      (dest === "all" || div.dataset.destination === dest)
+        ? "block"
+        : "none";
   });
 }
 
-// ---- CREAZIONE GALLERY DINAMICA ----
-async function createGallery() {
-  gallery.innerHTML = ""; // pulisce gallery
-  createFilters(); // aggiorna pulsanti filtro
+/* -------------------- LIGHTBOX -------------------- */
 
-  for (const photo of photos) {
-    const div = document.createElement("div");
-    div.classList.add("photo");
-    div.dataset.destination = photo.destination;
-
-    div.innerHTML = `
-      <img src="${photo.url}" width="90%">
-      <button class="likeBtn" aria-label="Mi piace">
-        <span class="heartWrapper"><span class="heart">🤍</span></span>
-        <span class="likeCount">0</span>
-      </button>
-    `;
-
-    gallery.appendChild(div);
-
-    const docRef = doc(db, "likes", photo.id);
-    const snap = await getDoc(docRef);
-    if (!snap.exists()) await setDoc(docRef, { count: 0 });
-
-    initLikeButton(div, photo.id);
-  }
-}
-
-// ---- AVVIO ----
-createGallery();
-
-// ---- OPZIONE AGGIORNAMENTO AUTOMATICO ----
-// Se modifichi l'array photos, basta richiamare createGallery() per aggiornare gallery e pulsanti
-// Esempio:
-// photos.push({ id: "nuova_foto", url: "URL_CLOUDINARY", destination: "Milano" });
-// createGallery();
-
-
-
-
+function openLightbox(index) {
+  currentIndex = index;
+  lightbox.classList.add("active");
+  lightboxImg.src = photos[curren]()
