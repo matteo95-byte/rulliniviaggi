@@ -101,7 +101,66 @@ function filterDestination(dest) {
 
 /* -------------------- LIGHTBOX -------------------- */
 
+const lightbox = document.getElementById("lightbox");
+const lightboxImg = document.getElementById("lightbox-img");
+const prevZone = document.getElementById("prevZone");
+const nextZone = document.getElementById("nextZone");
+const closeBtn = document.getElementById("closeLightbox");
+const overlay = document.getElementById("overlay");
+
+let currentIndex = 0;
+
+/* Apertura */
 function openLightbox(index) {
   currentIndex = index;
   lightbox.classList.add("active");
-  lightboxImg.src = photos[curren]()
+  document.body.style.overflow = "hidden"; // blocca scroll
+  updateImage();
+}
+
+/* Chiusura */
+function closeLightbox() {
+  lightbox.classList.remove("active");
+  document.body.style.overflow = "auto";
+}
+
+/* Aggiorna immagine */
+function updateImage(direction = null) {
+
+  if (direction) {
+    lightboxImg.classList.remove("slide-left", "slide-right");
+    void lightboxImg.offsetWidth;
+
+    lightboxImg.classList.add(
+      direction === "next" ? "slide-left" : "slide-right"
+    );
+  }
+
+  lightboxImg.src = photos[currentIndex].url;
+}
+
+/* Navigazione */
+function showNext() {
+  currentIndex = (currentIndex + 1) % photos.length;
+  updateImage("next");
+}
+
+function showPrev() {
+  currentIndex = (currentIndex - 1 + photos.length) % photos.length;
+  updateImage("prev");
+}
+
+/* Eventi */
+nextZone.addEventListener("click", showNext);
+prevZone.addEventListener("click", showPrev);
+closeBtn.addEventListener("click", closeLightbox);
+overlay.addEventListener("click", closeLightbox);
+
+/* Tastiera */
+document.addEventListener("keydown", (e) => {
+  if (!lightbox.classList.contains("active")) return;
+
+  if (e.key === "ArrowRight") showNext();
+  if (e.key === "ArrowLeft") showPrev();
+  if (e.key === "Escape") closeLightbox();
+});
