@@ -29,6 +29,7 @@ const filtersDiv = document.getElementById("filters");
 
 const lightbox = document.getElementById("lightbox");
 const lightboxImg = document.getElementById("lightbox-img");
+const bigHeart = document.getElementById("bigHeart");
 const prevZone = document.getElementById("prevZone");
 const nextZone = document.getElementById("nextZone");
 const closeBtn = document.getElementById("closeLightbox");
@@ -54,23 +55,60 @@ async function initLikeButton(div, photoId) {
   }
 
   btn.onclick = async () => {
-    const liked = isLiked();
-
-    await updateDoc(doc(db, "likes", photoId), {
-      count: increment(liked ? -1 : 1)
-    });
-
-    if (liked) localStorage.removeItem(photoId);
-    else localStorage.setItem(photoId, "true");
-
-    heartWrapper.classList.remove("pop");
-    void heartWrapper.offsetWidth;
-    heartWrapper.classList.add("pop");
-
-    loadLikes();
+    await toggleLike(photoId, heartWrapper);
   };
 
   loadLikes();
+}
+
+/* -------------------- FUNZIONE TOGGLE LIKE -------------------- */
+
+async function toggleLike(photoId, heartWrapper = null) {
+  const liked = localStorage.getItem(photoId) === "true";
+
+  // Aggiorna Firebase
+  await updateDoc(doc(db, "likes", photoId), {
+    count: increment(liked ? -1 : 1)
+  });
+
+  // Aggiorna localStorage
+  if (liked) localStorage.removeItem(photoId);
+  else localStorage.setItem(photoId, "true");
+
+  // Aggiorna UI dei bottoni se heartWrapper fornito
+  if (heartWrapper) {
+    heartWrapper.classList.remove("pop");
+    void heartWrapper.offsetWidth;
+    heartWrapper.classList.add("pop");
+  }
+
+  // Aggiorna lightbox se è la foto corrente
+  if (lightbox.classList.contains("active") && photos[currentIndex].id === photoId) {
+    animateBigHeart(!liked);
+  }
+
+  // Aggiorna conteggio like
+  const divs = document.querySelectorAll(".photo");
+  divs.forEach(div => {
+    if (div.querySelector(".likeBtn") && div.querySelector(".likeBtn").dataset.photoId === photoId) {
+      const countEl = div.querySelector(".likeCount");
+      getDoc(doc(db, "likes", photoId)).then(snap => {
+        if (snap.exists()) countEl.textContent = snap.data().count;
+      });
+      const heartEl = div.querySelector(".heart");
+      if (heartEl) heartEl.textContent = !liked ? "❤️" : "🤍";
+    }
+  });
+}
+
+/* -------------------- ANIMAZIONE BIG HEART -------------------- */
+
+function animateBigHeart(like = true) {
+  bigHeart.classList.remove("pop-in", "pop-out");
+  void bigHeart.offsetWidth;
+
+  if (like) bigHeart.classList.add("pop-in");
+  else bigHeart.classList.add("pop-out");
 }
 
 /* -------------------- FILTRI -------------------- */
@@ -117,6 +155,7 @@ function updateImage(direction = null) {
     lightboxImg.classList.add(direction === "next" ? "slide-left" : "slide-right");
   }
   lightboxImg.src = photos[currentIndex].url;
+  lightboxImg.dataset.id = photos[currentIndex].id;
 }
 
 function showNext() {
@@ -142,6 +181,13 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") closeLightbox();
 });
 
+/* -------------------- DOUBLE CLICK PER LIKE -------------------- */
+
+lightbox.addEventListener("dblclick", () => {
+  const currentPhotoId = lightboxImg.dataset.id;
+  toggleLike(currentPhotoId);
+});
+
 /* -------------------- CREAZIONE GALLERY -------------------- */
 
 async function createGallery() {
@@ -157,7 +203,7 @@ async function createGallery() {
 
     div.innerHTML = `
       <img src="${photo.url}">
-      <button class="likeBtn" aria-label="Mi piace">
+      <button class="likeBtn" aria-label="Mi piace" data-photo-id="${photo.id}">
         <span class="heartWrapper"><span class="heart">🤍</span></span>
         <span class="likeCount">0</span>
       </button>
