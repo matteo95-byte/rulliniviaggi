@@ -34,36 +34,26 @@ const prevZone = document.getElementById("prevZone");
 const nextZone = document.getElementById("nextZone");
 const closeBtn = document.getElementById("closeLightbox");
 const overlay = document.getElementById("overlay");
+const fullscreenLikeCount = document.getElementById("fullscreenLikeCount");
 
 let currentIndex = 0;
 
-/* -------------------- LIKE BUTTON -------------------- */
+/* -------------------- ANIMAZIONE BIG HEART -------------------- */
 
-async function initLikeButton(div, photoId) {
-  const btn = div.querySelector(".likeBtn");
-  const heartEl = div.querySelector(".heart");
-  const heartWrapper = div.querySelector(".heartWrapper");
-  const countEl = div.querySelector(".likeCount");
+function animateBigHeart(like = true) {
+  bigHeart.classList.remove("pop-in", "pop-out");
+  void bigHeart.offsetWidth;
 
-  function isLiked() { return localStorage.getItem(photoId) === "true"; }
-  function setLikedUI(liked) { heartEl.textContent = liked ? "❤️" : "🤍"; }
-
-  async function loadLikes() {
-    const snap = await getDoc(doc(db, "likes", photoId));
-    countEl.textContent = snap.exists() ? snap.data().count : "0";
-    setLikedUI(isLiked());
+  if (like) {
+    bigHeart.classList.add("pop-in");
+  } else {
+    bigHeart.classList.add("pop-out");
   }
-
-  btn.onclick = async () => {
-    await toggleLike(photoId, heartWrapper);
-  };
-
-  loadLikes();
 }
 
-/* -------------------- FUNZIONE TOGGLE LIKE -------------------- */
+/* -------------------- TOGGLE LIKE -------------------- */
 
-async function toggleLike(photoId, heartWrapper = null) {
+async function toggleLike(photoId) {
   const liked = localStorage.getItem(photoId) === "true";
 
   // Aggiorna Firebase
@@ -75,40 +65,46 @@ async function toggleLike(photoId, heartWrapper = null) {
   if (liked) localStorage.removeItem(photoId);
   else localStorage.setItem(photoId, "true");
 
-  // Aggiorna UI dei bottoni se heartWrapper fornito
-  if (heartWrapper) {
-    heartWrapper.classList.remove("pop");
-    void heartWrapper.offsetWidth;
-    heartWrapper.classList.add("pop");
-  }
-
-  // Aggiorna lightbox se è la foto corrente
-  if (lightbox.classList.contains("active") && photos[currentIndex].id === photoId) {
-    animateBigHeart(!liked);
-  }
-
-  // Aggiorna conteggio like
-  const divs = document.querySelectorAll(".photo");
-  divs.forEach(div => {
-    if (div.querySelector(".likeBtn") && div.querySelector(".likeBtn").dataset.photoId === photoId) {
-      const countEl = div.querySelector(".likeCount");
+  // Aggiorna gallery (cuore piccolo + count)
+  document.querySelectorAll(".photo").forEach(div => {
+    const btn = div.querySelector(".likeBtn");
+    const heartEl = div.querySelector(".heart");
+    const countEl = div.querySelector(".likeCount");
+    if (btn && btn.dataset.photoId === photoId) {
       getDoc(doc(db, "likes", photoId)).then(snap => {
         if (snap.exists()) countEl.textContent = snap.data().count;
       });
-      const heartEl = div.querySelector(".heart");
-      if (heartEl) heartEl.textContent = !liked ? "❤️" : "🤍";
+      heartEl.textContent = liked ? "🤍" : "❤️"; // solo colore
     }
   });
+
+  // Aggiorna fullscreen se aperto
+  if (lightbox.classList.contains("active") && lightboxImg.dataset.id === photoId) {
+    getDoc(doc(db, "likes", photoId)).then(snap => {
+      if (snap.exists()) fullscreenLikeCount.textContent = snap.data().count + " ❤️";
+    });
+    animateBigHeart(!liked);
+  }
 }
 
-/* -------------------- ANIMAZIONE BIG HEART -------------------- */
+/* -------------------- INIZIALIZZAZIONE LIKE BUTTON -------------------- */
 
-function animateBigHeart(like = true) {
-  bigHeart.classList.remove("pop-in", "pop-out");
-  void bigHeart.offsetWidth;
+async function initLikeButton(div, photoId) {
+  const btn = div.querySelector(".likeBtn");
+  const heartEl = div.querySelector(".heart");
+  const countEl = div.querySelector(".likeCount");
 
-  if (like) bigHeart.classList.add("pop-in");
-  else bigHeart.classList.add("pop-out");
+  async function loadLikes() {
+    const snap = await getDoc(doc(db, "likes", photoId));
+    countEl.textContent = snap.exists() ? snap.data().count : "0";
+    heartEl.textContent = localStorage.getItem(photoId) === "true" ? "❤️" : "🤍";
+  }
+
+  btn.onclick = async () => {
+    await toggleLike(photoId);
+  };
+
+  loadLikes();
 }
 
 /* -------------------- FILTRI -------------------- */
@@ -156,6 +152,12 @@ function updateImage(direction = null) {
   }
   lightboxImg.src = photos[currentIndex].url;
   lightboxImg.dataset.id = photos[currentIndex].id;
+
+  // Aggiorna contatore like fullscreen
+  getDoc(doc(db, "likes", photos[currentIndex].id)).then(snap => {
+    if (snap.exists()) fullscreenLikeCount.textContent = snap.data().count + " ❤️";
+    else fullscreenLikeCount.textContent = "0 ❤️";
+  });
 }
 
 function showNext() {
@@ -181,7 +183,7 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") closeLightbox();
 });
 
-/* -------------------- DOUBLE CLICK PER LIKE -------------------- */
+/* -------------------- DOUBLE CLICK FULLSCREEN -------------------- */
 
 lightbox.addEventListener("dblclick", () => {
   const currentPhotoId = lightboxImg.dataset.id;
@@ -227,3 +229,4 @@ async function createGallery() {
 /* -------------------- AVVIO -------------------- */
 
 createGallery();
+
