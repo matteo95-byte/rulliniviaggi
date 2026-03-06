@@ -1,44 +1,38 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="UTF-8">
-<title>Viaggi Analogici</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Viaggi Analogici</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
 <h1>Viaggi Analogici</h1>
 
+<!-- FILTRI DESTINAZIONE -->
 <div id="filters"></div>
 
+<!-- GALLERY -->
 <div id="gallery" class="gallery"></div>
 
+<!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox">
+  <div class="lightbox-overlay" id="overlay"></div>
 
-<div class="lightbox-overlay" id="overlay"></div>
+  <div class="lightbox-content">
+    <img id="lightbox-img">
+    <div class="big-heart" id="bigHeart">❤️</div>
+  </div>
 
-<div class="lightbox-content">
-<img id="lightbox-img">
+  <div id="fullscreenLikeCount">0 ❤️</div>
 
-<div class="big-heart" id="bigHeart">❤️</div>
-</div>
-
-<div id="fullscreenLikeCount">0 ❤️</div>
-
-<div class="nav-zone left" id="prevZone">
-<div class="arrow">&#10094;</div>
-</div>
-
-<div class="nav-zone right" id="nextZone">
-<div class="arrow">&#10095;</div>
-</div>
-
-<span class="close-btn" id="closeLightbox">&times;</span>
-
+  <div class="nav-zone left" id="prevZone"><div class="arrow">&#10094;</div></div>
+  <div class="nav-zone right" id="nextZone"><div class="arrow">&#10095;</div></div>
+  <span class="close-btn" id="closeLightbox">&times;</span>
 </div>
 
 <script type="module" src="like.js"></script>
-
+</body>
+</html>
 </body>
 </html>
