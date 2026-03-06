@@ -63,6 +63,7 @@ async function updateFullscreenLike(photoId) {
 /* -------------------- TOGGLE LIKE -------------------- */
 
 async function toggleLike(photoId) {
+
   const liked = localStorage.getItem(photoId) === "true";
   const ref = doc(db, "likes", photoId);
 
@@ -80,23 +81,31 @@ async function toggleLike(photoId) {
   else localStorage.setItem(photoId, "true");
 
   document.querySelectorAll(".photo").forEach(div => {
+
     const btn = div.querySelector(".likeBtn");
     const heartEl = div.querySelector(".heart");
     const countEl = div.querySelector(".likeCount");
 
     if (btn && btn.dataset.photoId === photoId) {
+
       getDoc(ref).then(snap => {
         if (snap.exists()) countEl.textContent = snap.data().count;
       });
 
       heartEl.textContent = liked ? "🤍" : "❤️";
+
     }
+
   });
 
   if (lightbox.classList.contains("active") && lightboxImg.dataset.id === photoId) {
+
     if (!liked) animateBigHeart();
+
     updateFullscreenLike(photoId);
+
   }
+
 }
 
 /* -------------------- INIZIALIZZAZIONE LIKE BUTTON -------------------- */
