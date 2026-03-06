@@ -21,13 +21,13 @@ let photos = [
 
 {
 id:"fiore_yfh2db",
-url:"https://res.cloudinary.com/dim73lhdw/image/upload/f_auto,q_auto,w_1200/v1770160997/fiore_yfh2db",
+url:"https://res.cloudinary.com/dim73lhdw/image/upload/f_auto,q_auto,w_1200/v1770160997/fiore_yfh2db.PNG",
 destination:"Ascoli"
 },
 
 {
 id:"benito_shjdqg",
-url:"https://res.cloudinary.com/dim73lhdw/image/upload/f_auto,q_auto,w_1200/v1770334313/benito_shjdqg",
+url:"https://res.cloudinary.com/dim73lhdw/image/upload/f_auto,q_auto,w_1200/v1770334313/benito_shjdqg.PNG",
 destination:"Sanmarco"
 }
 
