@@ -41,12 +41,7 @@
 </div>
 
 <!-- CARICAMENTO DINAMICO DEL JS CON CACHE-BUSTING -->
-<script type="module">
-  const script = document.createElement("script");
-  script.type = "module";
-  script.src = `like.js?t=${Date.now()}`;
-  document.body.appendChild(script);
-</script>
+<script type="module" src="like.js"></script>
 
 </body>
 </html>
