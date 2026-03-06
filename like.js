@@ -64,32 +64,37 @@ async function updateFullscreenLike(photoId) {
 
 async function toggleLike(photoId) {
   const liked = localStorage.getItem(photoId) === "true";
+  const ref = doc(db, "likes", photoId);
 
-  // Aggiorna Firebase
-  await updateDoc(doc(db, "likes", photoId), {
-    count: increment(liked ? -1 : 1)
-  });
+  const snap = await getDoc(ref);
 
-  // Aggiorna localStorage
+  if (!snap.exists()) {
+    await setDoc(ref, { count: liked ? 0 : 1 });
+  } else {
+    await updateDoc(ref, {
+      count: increment(liked ? -1 : 1)
+    });
+  }
+
   if (liked) localStorage.removeItem(photoId);
   else localStorage.setItem(photoId, "true");
 
-  // Aggiorna UI dei bottoni nella gallery
   document.querySelectorAll(".photo").forEach(div => {
     const btn = div.querySelector(".likeBtn");
     const heartEl = div.querySelector(".heart");
     const countEl = div.querySelector(".likeCount");
+
     if (btn && btn.dataset.photoId === photoId) {
-      getDoc(doc(db, "likes", photoId)).then(snap => {
+      getDoc(ref).then(snap => {
         if (snap.exists()) countEl.textContent = snap.data().count;
       });
+
       heartEl.textContent = liked ? "🤍" : "❤️";
     }
   });
 
-  // Aggiorna fullscreen se aperto
   if (lightbox.classList.contains("active") && lightboxImg.dataset.id === photoId) {
-    if (!liked) animateBigHeart(); // mostra cuore solo quando aggiunge like
+    if (!liked) animateBigHeart();
     updateFullscreenLike(photoId);
   }
 }
