@@ -20,7 +20,6 @@ const db = getFirestore(app);
 let photos = [
   { id: "fiore_yfh2db", url: "https://res.cloudinary.com/dim73lhdw/image/upload/v1770160997/fiore_yfh2db.png", destination: "Ascoli" },
   { id: "benito_shjdqg", url: "https://res.cloudinary.com/dim73lhdw/image/upload/v1770334313/benito_shjdqg.png", destination: "Sanmarco" }
-  { id: "london_01", url: "https://res.cloudinary.com/dim73lhdw/image/upload/v1772762331/london_01.jpg", destination: "Londra" }
 ];
 
 /* -------------------- SELEZIONI HTML -------------------- */
