@@ -1,7 +1,8 @@
 const photos = [
   { id: "fiore_yfh2db", url: "https://res.cloudinary.com/dim73lhdw/image/upload/v1770160997/fiore_yfh2db.png", destination: "Ascoli" },
   { id: "benito_shjdqg", url: "https://res.cloudinary.com/dim73lhdw/image/upload/v1770334313/benito_shjdqg.png", destination: "Sanmarco" },
-  { id: "london_01", url: "https://res.cloudinary.com/dim73lhdw/image/upload/v1772767782/london_01.png", destination: "Londra" }
+  { id: "london_01", url: "https://res.cloudinary.com/dim73lhdw/image/upload/v1772767782/london_01.png", destination: "Londra" },
+  { id: "london_02", url: "https://res.cloudinary.com/dim73lhdw/image/upload/v1772812368/london_02.png", destination: "Londra" }
 ];
 
 const gallery = document.getElementById("gallery");
